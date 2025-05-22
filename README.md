@@ -11,6 +11,9 @@
 ## 🧾 Introduction
 This project focuses on re-engineering and securing an existing Flask-based banking application. The goal is to identify and remediate security vulnerabilities, strengthen the application’s architecture, and demonstrate secure software development best practices.
 
+The original application was cloned from:  
+🔗 [https://github.com/lanlanjr/simple-banking-app](https://github.com/lanlanjr/simple-banking-app)
+
 ## 🎯 Objectives
 - Assess the security posture of the original application.
 - Fix critical and common security flaws.
