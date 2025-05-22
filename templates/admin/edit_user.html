@@ -1,0 +1,275 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-8 offset-lg-2">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2>Edit User: {{ user.username }}</h2>
+            <a href="{{ url_for('admin_dashboard') }}" class="btn btn-outline-primary">Back to Dashboard</a>
+        </div>
+        
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">User Information</h5>
+            </div>
+            <div class="card-body">
+                <form method="POST" action="{{ url_for('edit_user', user_id=user.id) }}">
+                    {{ form.hidden_tag() }}
+                    
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">Username</label>
+                                <input type="text" class="form-control" value="{{ user.username }}" disabled>
+                                <div class="form-text">Username cannot be changed</div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">Account Number</label>
+                                <input type="text" class="form-control" value="{{ user.account_number }}" disabled>
+                                <div class="form-text">Account number cannot be changed</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                {{ form.firstname.label(class="form-label") }}
+                                {{ form.firstname(class="form-control") }}
+                                {% for error in form.firstname.errors %}
+                                <span class="text-danger">{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                {{ form.lastname.label(class="form-label") }}
+                                {{ form.lastname(class="form-control") }}
+                                {% for error in form.lastname.errors %}
+                                <span class="text-danger">{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        {{ form.email.label(class="form-label") }}
+                        {{ form.email(class="form-control") }}
+                        {% for error in form.email.errors %}
+                        <span class="text-danger">{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                    
+                    <!-- Detailed Address Section -->
+                    <div class="card mb-3">
+                        <div class="card-header bg-light">
+                            <h5 class="mb-0">Detailed Address Information</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="mb-3">
+                                {{ form.address_line.label(class="form-label") }}
+                                {{ form.address_line(class="form-control", placeholder="House/Lot/Unit Number, Building Name, Street") }}
+                                {% for error in form.address_line.errors %}
+                                <span class="text-danger">{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                            
+                            <!-- Hidden fields for codes -->
+                            {{ form.region_code() }}
+                            {{ form.province_code() }}
+                            {{ form.city_code() }}
+                            {{ form.barangay_code() }}
+                            
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    {{ form.region_name.label(class="form-label") }}
+                                    {{ form.region_name(class="form-select", id="region_select") }}
+                                    {% for error in form.region_name.errors %}
+                                    <span class="text-danger">{{ error }}</span>
+                                    {% endfor %}
+                                </div>
+                                <div class="col-md-6">
+                                    {{ form.province_name.label(class="form-label") }}
+                                    {{ form.province_name(class="form-select", id="province_select") }}
+                                    {% for error in form.province_name.errors %}
+                                    <span class="text-danger">{{ error }}</span>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    {{ form.city_name.label(class="form-label") }}
+                                    {{ form.city_name(class="form-select", id="city_select") }}
+                                    {% for error in form.city_name.errors %}
+                                    <span class="text-danger">{{ error }}</span>
+                                    {% endfor %}
+                                </div>
+                                <div class="col-md-6">
+                                    {{ form.barangay_name.label(class="form-label") }}
+                                    {{ form.barangay_name(class="form-select", id="barangay_select") }}
+                                    {% for error in form.barangay_name.errors %}
+                                    <span class="text-danger">{{ error }}</span>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                {{ form.postal_code.label(class="form-label") }}
+                                {{ form.postal_code(class="form-control", placeholder="e.g. 1200") }}
+                                {% for error in form.postal_code.errors %}
+                                <span class="text-danger">{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        {{ form.phone.label(class="form-label") }}
+                        {{ form.phone(class="form-control") }}
+                        {% for error in form.phone.errors %}
+                        <span class="text-danger">{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                    
+                    <div class="mb-3">
+                        {{ form.status.label(class="form-label") }}
+                        {{ form.status(class="form-select") }}
+                        {% for error in form.status.errors %}
+                        <span class="text-danger">{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">Current Balance</label>
+                                <div class="input-group">
+                                    <span class="input-group-text">₱</span>
+                                    <input type="text" class="form-control" value="{{ "%.2f"|format(user.balance) }}" disabled>
+                                </div>
+                                <div class="form-text">Use deposit feature to update balance</div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">Registration Date</label>
+                                <input type="text" class="form-control" value="{{ user.date_registered.strftime('%Y-%m-%d %H:%M') }}" disabled>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="d-grid">
+                        {{ form.submit(class="btn btn-primary") }}
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const regionSelect = document.getElementById('region_select');
+        const provinceSelect = document.getElementById('province_select');
+        const citySelect = document.getElementById('city_select');
+        const barangaySelect = document.getElementById('barangay_select');
+        
+        const regionCode = document.getElementById('region_code');
+        const provinceCode = document.getElementById('province_code');
+        const cityCode = document.getElementById('city_code');
+        const barangayCode = document.getElementById('barangay_code');
+        
+        // Load provinces when region is selected
+        regionSelect.addEventListener('change', function() {
+            const selectedRegion = this.value;
+            regionCode.value = selectedRegion;
+            
+            // Reset dependent fields
+            provinceSelect.innerHTML = '<option value="">-- Select Province --</option>';
+            citySelect.innerHTML = '<option value="">-- Select City/Municipality --</option>';
+            barangaySelect.innerHTML = '<option value="">-- Select Barangay --</option>';
+            provinceCode.value = '';
+            cityCode.value = '';
+            barangayCode.value = '';
+            
+            if (selectedRegion) {
+                // Fetch provinces for the selected region
+                fetch(`/api/provinces/${selectedRegion}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        data.forEach(province => {
+                            const option = document.createElement('option');
+                            option.value = province.code;
+                            option.textContent = province.name;
+                            provinceSelect.appendChild(option);
+                        });
+                    })
+                    .catch(error => console.error('Error loading provinces:', error));
+            }
+        });
+        
+        // Load cities/municipalities when province is selected
+        provinceSelect.addEventListener('change', function() {
+            const selectedProvince = this.value;
+            provinceCode.value = selectedProvince;
+            
+            // Reset dependent fields
+            citySelect.innerHTML = '<option value="">-- Select City/Municipality --</option>';
+            barangaySelect.innerHTML = '<option value="">-- Select Barangay --</option>';
+            cityCode.value = '';
+            barangayCode.value = '';
+            
+            if (selectedProvince) {
+                // Fetch cities and municipalities for the selected province
+                fetch(`/api/cities/${selectedProvince}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        data.forEach(city => {
+                            const option = document.createElement('option');
+                            option.value = city.code;
+                            option.textContent = city.name;
+                            citySelect.appendChild(option);
+                        });
+                    })
+                    .catch(error => console.error('Error loading cities/municipalities:', error));
+            }
+        });
+        
+        // Load barangays when city/municipality is selected
+        citySelect.addEventListener('change', function() {
+            const selectedCity = this.value;
+            cityCode.value = selectedCity;
+            
+            // Reset dependent fields
+            barangaySelect.innerHTML = '<option value="">-- Select Barangay --</option>';
+            barangayCode.value = '';
+            
+            if (selectedCity) {
+                // Fetch barangays for the selected city/municipality
+                fetch(`/api/barangays/${selectedCity}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        data.forEach(barangay => {
+                            const option = document.createElement('option');
+                            option.value = barangay.code;
+                            option.textContent = barangay.name;
+                            barangaySelect.appendChild(option);
+                        });
+                    })
+                    .catch(error => console.error('Error loading barangays:', error));
+            }
+        });
+        
+        // Update hidden field when barangay is selected
+        barangaySelect.addEventListener('change', function() {
+            const selectedBarangay = this.value;
+            barangayCode.value = selectedBarangay;
+        });
+    });
+</script>
+{% endblock %} 

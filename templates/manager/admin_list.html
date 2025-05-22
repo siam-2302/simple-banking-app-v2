@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-10 offset-lg-1">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2>All Admin Users</h2>
+            <a href="{{ url_for('manager_dashboard') }}" class="btn btn-outline-primary">Back to Manager Dashboard</a>
+        </div>
+        
+        <!-- Admin List -->
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">Admin Accounts</h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Username</th>
+                                <th>Email</th>
+                                <th>Account Number</th>
+                                <th>Status</th>
+                                <th>Balance</th>
+                                <th>Date Registered</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for admin in admins %}
+                            <tr>
+                                <td>{{ admin.username }}</td>
+                                <td>{{ admin.email }}</td>
+                                <td>{{ admin.account_number }}</td>
+                                <td>
+                                    {% if admin.status == 'active' %}
+                                    <span class="badge bg-success">Active</span>
+                                    {% elif admin.status == 'deactivated' %}
+                                    <span class="badge bg-danger">Deactivated</span>
+                                    {% else %}
+                                    <span class="badge bg-warning text-dark">Pending</span>
+                                    {% endif %}
+                                </td>
+                                <td>₱{{ "%.2f"|format(admin.balance) }}</td>
+                                <td>{{ admin.date_registered.strftime('%Y-%m-%d %H:%M') }}</td>
+                                <td>
+                                    <a href="{{ url_for('toggle_admin', user_id=admin.id) }}" class="btn btn-sm btn-warning">Remove Admin</a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                
+                {% if not admins %}
+                <div class="text-center p-4">
+                    <p class="text-muted">No admin accounts found.</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

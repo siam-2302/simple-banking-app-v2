@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-6 offset-md-3">
+        <div class="card">
+            <div class="card-header">
+                <h4>Confirm Transfer</h4>
+            </div>
+            <div class="card-body">
+                <div class="alert alert-warning">
+                    <p>Please confirm the following transfer:</p>
+                    <hr>
+                    <p><strong>To:</strong> {{ recipient.username }}</p>
+                    <p><strong>Account Number:</strong> {{ recipient.account_number }}</p>
+                    <p><strong>Amount:</strong> ₱{{ "%.2f"|format(amount) }}</p>
+                    <p><strong>From Account Balance:</strong> ₱{{ "%.2f"|format(current_user.balance) }}</p>
+                    <p><strong>Remaining Balance After Transfer:</strong> ₱{{ "%.2f"|format(current_user.balance - amount) }}</p>
+                </div>
+                
+                <form action="{{ url_for('execute_transfer') }}" method="post">
+                    {{ form.hidden_tag() }}
+                    
+                    <div class="d-flex justify-content-between">
+                        <a href="{{ url_for('transfer') }}" class="btn btn-secondary">Cancel</a>
+                        {{ form.submit(class="btn btn-success") }}
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

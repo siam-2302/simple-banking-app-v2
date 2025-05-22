@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-8 offset-lg-2">
+        <div class="card text-center">
+            <div class="card-header">
+                <h2>Welcome to SimpleBankApp</h2>
+            </div>
+            <div class="card-body">
+                <h5 class="card-title">Hello, {{ current_user.username }}!</h5>
+                <p class="card-text">
+                    What would you like to do today?
+                </p>
+                <div class="row mt-4">
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title"><i class="bi bi-wallet"></i> Account</h5>
+                                <p class="card-text">View your balance and recent transactions</p>
+                                <a href="{{ url_for('account') }}" class="btn btn-primary">Go to Account</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title"><i class="bi bi-arrow-left-right"></i> Transfer</h5>
+                                <p class="card-text">Send money to another user account</p>
+                                <a href="{{ url_for('transfer') }}" class="btn btn-primary">Make a Transfer</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

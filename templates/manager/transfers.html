@@ -1,0 +1,174 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-12">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2>Transfer Transactions</h2>
+            <a href="{{ url_for('manager_dashboard') }}" class="btn btn-outline-primary">Back to Dashboard</a>
+        </div>
+        
+        <!-- Filters -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">Filter Transfers</h5>
+            </div>
+            <div class="card-body">
+                <form method="GET" action="{{ url_for('manager_transfers') }}" class="row g-3">
+                    <div class="col-md-12 mb-3">
+                        <div class="input-group">
+                            <input type="text" name="search" class="form-control" placeholder="Search by ID, account number, username, or amount" value="{{ request.args.get('search', '') }}">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-search"></i> Search
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-3">
+                        <label class="form-label">From Date</label>
+                        <input type="date" name="from_date" class="form-control" value="{{ request.args.get('from_date', '') }}">
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">To Date</label>
+                        <input type="date" name="to_date" class="form-control" value="{{ request.args.get('to_date', '') }}">
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">Minimum Amount</label>
+                        <input type="number" step="0.01" name="min_amount" class="form-control" placeholder="Min ₱" value="{{ request.args.get('min_amount', '') }}">
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">Maximum Amount</label>
+                        <input type="number" step="0.01" name="max_amount" class="form-control" placeholder="Max ₱" value="{{ request.args.get('max_amount', '') }}">
+                    </div>
+                    
+                    <div class="col-md-4">
+                        <label class="form-label">User</label>
+                        <select name="user_id" class="form-select">
+                            <option value="">All Users</option>
+                            {% for user in users %}
+                            <option value="{{ user.id }}" {% if request.args.get('user_id')|int == user.id %}selected{% endif %}>
+                                {{ user.username }}
+                                {% if user.is_admin %}(Admin){% endif %}
+                                {% if user.is_manager %}(Manager){% endif %}
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">User Role</label>
+                        <select name="user_role" class="form-select">
+                            <option value="">Both Sender & Receiver</option>
+                            <option value="sender" {% if request.args.get('user_role') == 'sender' %}selected{% endif %}>As Sender</option>
+                            <option value="receiver" {% if request.args.get('user_role') == 'receiver' %}selected{% endif %}>As Receiver</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4 align-self-end">
+                        <button type="submit" class="btn btn-primary w-100">Apply Filters</button>
+                    </div>
+                    
+                    {% if request.args.get('search') or request.args.get('from_date') or request.args.get('to_date') or 
+                          request.args.get('min_amount') or request.args.get('max_amount') or 
+                          request.args.get('user_id') or request.args.get('user_role') %}
+                    <div class="col-12 mt-2">
+                        <a href="{{ url_for('manager_transfers') }}" class="btn btn-outline-secondary btn-sm">
+                            <i class="bi bi-x-circle"></i> Clear All Filters
+                        </a>
+                    </div>
+                    {% endif %}
+                </form>
+            </div>
+        </div>
+        
+        <!-- Transfer Transactions Table -->
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">
+                    {% if request.args.get('search') %}
+                    Search Results: "{{ request.args.get('search') }}"
+                    {% else %}
+                    All Transfer Transactions
+                    {% endif %}
+                </h5>
+                <span class="badge bg-secondary">{{ transactions|length }} transfers found</span>
+            </div>
+            <div class="card-body">
+                {% if transactions %}
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Date & Time</th>
+                                <th>From (Account #)</th>
+                                <th>To (Account #)</th>
+                                <th>Amount</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for transaction in transactions %}
+                            <tr>
+                                <td>{{ transaction.id }}</td>
+                                <td>{{ transaction.timestamp.strftime('%Y-%m-%d %H:%M') }}</td>
+                                <td>
+                                    {% if transaction.sender %}
+                                        <span data-bs-toggle="tooltip" data-bs-placement="top" title="{{ transaction.sender.username }}">
+                                            {{ transaction.sender.account_number }}
+                                        </span>
+                                        {% if transaction.sender.is_admin %}
+                                        <span class="badge bg-warning text-dark">Admin</span>
+                                        {% elif transaction.sender.is_manager %}
+                                        <span class="badge bg-danger">Manager</span>
+                                        {% endif %}
+                                    {% else %}
+                                        <span class="text-muted">Unknown</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if transaction.receiver %}
+                                        <span data-bs-toggle="tooltip" data-bs-placement="top" title="{{ transaction.receiver.username }}">
+                                            {{ transaction.receiver.account_number }}
+                                        </span>
+                                        {% if transaction.receiver.is_admin %}
+                                        <span class="badge bg-warning text-dark">Admin</span>
+                                        {% elif transaction.receiver.is_manager %}
+                                        <span class="badge bg-danger">Manager</span>
+                                        {% endif %}
+                                    {% else %}
+                                        <span class="text-muted">Unknown</span>
+                                    {% endif %}
+                                </td>
+                                <td class="text-end fw-bold">₱{{ "%.2f"|format(transaction.amount) }}</td>
+                                <td>
+                                    <span class="badge bg-success">Completed</span>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <div class="text-center p-4">
+                    <p class="text-muted">No transfer transactions found.</p>
+                    {% if request.args %}
+                    <p>Try adjusting your search filters.</p>
+                    {% endif %}
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Initialize tooltips
+        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+        var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl);
+        });
+    });
+</script>
+{% endblock %} 

@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header bg-danger text-white">
+                <h4 class="mb-0"><i class="bi bi-exclamation-triangle-fill me-2"></i>Rate Limit Exceeded</h4>
+            </div>
+            <div class="card-body">
+                <p class="lead">You've made too many requests in a short period of time.</p>
+                <p>Please wait a moment before trying again. This helps us protect our services from abuse and ensures a fair experience for all users.</p>
+                
+                <div class="alert alert-info">
+                    <p class="mb-0"><strong>Message:</strong> {{ message }}</p>
+                </div>
+                
+                <div class="mt-4">
+                    <a href="{{ url_for('index') }}" class="btn btn-primary">Return to Home</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

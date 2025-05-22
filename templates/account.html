@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-8 offset-lg-2">
+        <h2 class="mb-4">Account Summary</h2>
+        
+        <!-- Balance Card -->
+        <div class="card balance-card mb-4">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h5 class="card-title">Current Balance</h5>
+                        <h2 class="display-4">₱{{ "%.2f"|format(current_user.balance) }}</h2>
+                        <p class="mt-2">Account Number: <strong>{{ current_user.account_number }}</strong></p>
+                    </div>
+                    <div class="col-md-6 text-end">
+                        <a href="{{ url_for('transfer') }}" class="btn btn-light mt-3">Make a Transfer</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Transaction History -->
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">Recent Transactions</h5>
+            </div>
+            <div class="card-body">
+                {% if transactions %}
+                    {% for transaction in transactions %}
+                        {% if transaction.sender_id == current_user.id %}
+                            {% if transaction.transaction_type == 'deposit' and current_user.is_admin %}
+                            <div class="transaction-item">
+                                <div class="d-flex justify-content-between">
+                                    <div>
+                                        <strong>Admin Deposit to:</strong> {{ transaction.receiver.username }} ({{ transaction.receiver.account_number }})
+                                        <div class="text-secondary small">{{ transaction.timestamp.strftime('%Y-%m-%d %H:%M') }}</div>
+                                        <span class="badge bg-info">Over-the-counter deposit (Admin action)</span>
+                                    </div>
+                                    <div class="text-primary fw-bold">
+                                        ₱{{ "%.2f"|format(transaction.amount) }}
+                                    </div>
+                                </div>
+                            </div>
+                            {% else %}
+                            <div class="transaction-item sent">
+                                <div class="d-flex justify-content-between">
+                                    <div>
+                                        <strong>Sent to:</strong> {{ transaction.receiver.username }} ({{ transaction.receiver.account_number }})
+                                        <div class="text-secondary small">{{ transaction.timestamp.strftime('%Y-%m-%d %H:%M') }}</div>
+                                    </div>
+                                    <div class="text-danger fw-bold">
+                                        -₱{{ "%.2f"|format(transaction.amount) }}
+                                    </div>
+                                </div>
+                            </div>
+                            {% endif %}
+                        {% else %}
+                            <div class="transaction-item received">
+                                <div class="d-flex justify-content-between">
+                                    <div>
+                                        {% if transaction.transaction_type == 'deposit' %}
+                                            <strong>Deposit by:</strong> {{ transaction.sender.username }}
+                                            <div class="text-secondary small">{{ transaction.timestamp.strftime('%Y-%m-%d %H:%M') }}</div>
+                                            <span class="badge bg-info">Over-the-counter deposit</span>
+                                        {% else %}
+                                            <strong>Received from:</strong> {{ transaction.sender.username }} ({{ transaction.sender.account_number }})
+                                            <div class="text-secondary small">{{ transaction.timestamp.strftime('%Y-%m-%d %H:%M') }}</div>
+                                        {% endif %}
+                                    </div>
+                                    <div class="text-success fw-bold">
+                                        +₱{{ "%.2f"|format(transaction.amount) }}
+                                    </div>
+                                </div>
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                {% else %}
+                    <div class="text-center p-4">
+                        <p class="text-muted">No transactions yet.</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

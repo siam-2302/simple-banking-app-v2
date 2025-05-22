@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="card shadow">
+        <div class="card-body">
+            <h1 class="card-title text-center mb-4">About SimpleBankApp</h1>
+            
+            <div class="row mb-4">
+                <div class="col-md-6">
+                    <h3>Our Mission</h3>
+                    <p>SimpleBankApp is designed to provide a secure, intuitive, and reliable digital banking experience. Our mission is to make financial services accessible to everyone while maintaining the highest standards of security and user experience.</p>
+                </div>
+                <div class="col-md-6">
+                    <h3>Who We Are</h3>
+                    <p>We are a team of financial technology experts committed to creating innovative solutions for the modern banking industry. Our application combines robust security features with a user-friendly interface to deliver a seamless banking experience.</p>
+                </div>
+            </div>
+            
+            <div class="row mb-4">
+                <div class="col-md-6">
+                    <h3>Key Features</h3>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">Secure user authentication</li>
+                        <li class="list-group-item">Role-based access control</li>
+                        <li class="list-group-item">Instant money transfers</li>
+                        <li class="list-group-item">Transaction history tracking</li>
+                        <li class="list-group-item">Admin and manager dashboards</li>
+                        <li class="list-group-item">Philippine location data integration</li>
+                    </ul>
+                </div>
+                <div class="col-md-6">
+                    <h3>Security Measures</h3>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">Password hashing with bcrypt</li>
+                        <li class="list-group-item">CSRF protection on all forms</li>
+                        <li class="list-group-item">Rate limiting to prevent abuse</li>
+                        <li class="list-group-item">Secure session management</li>
+                        <li class="list-group-item">Two-step transaction confirmation</li>
+                        <li class="list-group-item">Admin approval workflow for new accounts</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col-12">
+                    <h3>Our Technology Stack</h3>
+                    <p>SimpleBankApp is built using modern web technologies to ensure reliability and performance:</p>
+                    <div class="row text-center">
+                        <div class="col-md-3 mb-3">
+                            <div class="card h-100">
+                                <div class="card-body">
+                                    <h5>Backend</h5>
+                                    <p>Python with Flask framework</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <div class="card h-100">
+                                <div class="card-body">
+                                    <h5>Database</h5>
+                                    <p>MySQL with SQLAlchemy ORM</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <div class="card h-100">
+                                <div class="card-body">
+                                    <h5>Frontend</h5>
+                                    <p>HTML, CSS, Bootstrap 5</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <div class="card h-100">
+                                <div class="card-body">
+                                    <h5>Security</h5>
+                                    <p>Flask-Limiter, Flask-Login, Flask-Bcrypt</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

@@ -1,0 +1,98 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-6 offset-lg-3">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2>Over-the-Counter Deposit</h2>
+            <a href="{{ url_for('admin_dashboard') }}" class="btn btn-outline-primary">Back to Dashboard</a>
+        </div>
+        
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Deposit Form</h5>
+            </div>
+            <div class="card-body">
+                <form method="POST" action="{{ url_for('admin_deposit') }}">
+                    {{ form.hidden_tag() }}
+                    
+                    <div class="mb-3">
+                        {{ form.account_number.label(class="form-label") }}
+                        <div class="input-group">
+                            {{ form.account_number(class="form-control") }}
+                            <button type="button" class="btn btn-outline-secondary" id="lookup-btn">Lookup Account</button>
+                        </div>
+                        {% for error in form.account_number.errors %}
+                        <span class="text-danger">{{ error }}</span>
+                        {% endfor %}
+                        <div class="form-text">Enter the user's account number to deposit funds</div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        {{ form.amount.label(class="form-label") }}
+                        <div class="input-group">
+                            <span class="input-group-text">₱</span>
+                            {{ form.amount(class="form-control") }}
+                        </div>
+                        {% for error in form.amount.errors %}
+                        <span class="text-danger">{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                    
+                    <div class="d-grid">
+                        {{ form.submit(class="btn btn-primary") }}
+                    </div>
+                </form>
+            </div>
+        </div>
+        
+        <!-- Account Verification Panel (displays after account number lookup) -->
+        {% if account_details %}
+        <div class="card mt-4">
+            <div class="card-header bg-success text-white">
+                <h5 class="mb-0">Account Found</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <p><strong>Username:</strong> {{ account_details.username }}</p>
+                        <p><strong>Account Number:</strong> {{ account_details.account_number }}</p>
+                    </div>
+                    <div class="col-md-6">
+                        <p><strong>Current Balance:</strong> ₱{{ "%.2f"|format(account_details.balance) }}</p>
+                        <p><strong>Status:</strong> 
+                            {% if account_details.status == 'active' %}
+                            <span class="badge bg-success">Active</span>
+                            {% elif account_details.status == 'deactivated' %}
+                            <span class="badge bg-danger">Deactivated</span>
+                            {% else %}
+                            <span class="badge bg-warning text-dark">Pending</span>
+                            {% endif %}
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Account lookup functionality
+        const lookupBtn = document.getElementById('lookup-btn');
+        const accountInput = document.getElementById('account_number');
+        
+        lookupBtn.addEventListener('click', function() {
+            const accountNumber = accountInput.value.trim();
+            if (accountNumber) {
+                window.location.href = "{{ url_for('admin_deposit') }}?account_number=" + accountNumber;
+            } else {
+                alert('Please enter an account number');
+            }
+        });
+    });
+</script>
+{% endblock %} 
