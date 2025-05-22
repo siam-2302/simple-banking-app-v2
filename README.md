@@ -2,9 +2,9 @@
 **Securing an Existing Banking Application — Security Assessment and Improvement of a Web-Based Banking Application**
 
 ## 👥 Group Members
-- Member 1: [Your Name Here]
-- Member 2: [Your Name Here]
-- Member 3: [Your Name Here]
+- Member 1: [Busadre, Christian Siam B.]
+- Member 2: [Lagdaan, Jeremy C.]
+- Member 3: [Palomares, Juan Paolo C.]
 
 ---
 
