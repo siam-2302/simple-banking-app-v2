@@ -1,89 +1,124 @@
-# Project Title
-Securing an Existing Banking Application – Security Assessment and Improvement of a Web-Based Banking Application
+# 📌 Project Title
+**Securing an Existing Banking Application — Security Assessment and Improvement of a Web-Based Banking Application**
 
-## Group Members
-- Member 1 – Role
-- Member 2 – Role
-- Member 3 – Role
-- Member 4 – Role
+## 👥 Group Members
+- Member 1: [Your Name Here]
+- Member 2: [Your Name Here]
+- Member 3: [Your Name Here]
 
-## Introduction
-This project aims to assess and improve the security posture of an existing open-source banking web application. The application simulates real-world banking functionality including user account management, fund transfers, and role-based user permissions. Our team performed a comprehensive security review and applied best practices to secure the system against common web vulnerabilities.
+---
 
-## Objectives
-- Identify and document security vulnerabilities in the original application
-- Implement robust security measures while preserving core banking functionality
-- Apply secure coding principles and OWASP Top 10 practices
-- Demonstrate the effectiveness of improvements through penetration testing
+## 🧾 Introduction
+This project focuses on re-engineering and securing an existing Flask-based banking application. The goal is to identify and remediate security vulnerabilities, strengthen the application’s architecture, and demonstrate secure software development best practices.
 
-## Original Application Features
-- User authentication (registration, login, password reset)
-- Account management (view balance, transaction history)
-- Fund transfers between users
-- Role-based user management: regular user, admin, manager
-- Philippine address data integration using PSGC API
+## 🎯 Objectives
+- Assess the security posture of the original application.
+- Fix critical and common security flaws.
+- Improve authentication, authorization, session handling, and error reporting.
+- Harden data validation, secure data storage, and rate limiting.
+- Demonstrate a secure deployment using Flask and MySQL.
 
-## Security Assessment Findings
-- Passwords stored with minimal validation and weak default credentials
-- Float values used for balance calculations (risk of rounding errors)
-- Lack of error handling for PSGC API failures
-- No output escaping on user-generated content (potential XSS)
-- No rate limiting on sensitive endpoints (e.g., login)
-- No HTTPS enforcement or security headers
-- Incomplete session management and CSRF token inconsistencies
-- Outdated third-party packages
+---
 
-## Security Improvements Implemented
-- Password validation improved: min 8 characters, special char, number, uppercase
-- Decimal precision (`Numeric`) replaced float for all monetary values
-- Proper CSRF protection added to all forms using Flask-WTF
-- Rate limiting enforced on login, registration, and admin actions using Flask-Limiter
-- PSGC API hardened with timeout and error handling
-- Session configuration secured (HttpOnly, Secure, SameSite)
-- Output encoding via Jinja2 to prevent reflected XSS
-- Bcrypt used for password hashing
-- Flask-Talisman suggested for HTTPS enforcement
+## 📦 Original Application Features
+- **User Authentication:** Login, registration, password recovery
+- **Account Management:** View balance, transaction history
+- **Fund Transfer:** Transfer between users with confirmation and logging
+- **Role Management:** Admin, Manager, Regular Users
+- **PSGC Integration:** Location selector for Philippines
+- **Admin Panel:** Approve users, deposit funds, update profiles
+- **Manager Panel:** Manage admins and monitor all activities
 
-## Penetration Testing Report
-- **SQL Injection:** Prevented by SQLAlchemy ORM
-- **CSRF Attacks:** Fixed via CSRF token validation
-- **Brute Force Login:** Rate limiting successfully blocked repeated attempts
-- **XSS:** Manual tests confirmed escaped user-generated content
-- **Broken Authentication:** Password reset tokens now expire securely
+---
 
-## Remediation Plan
-1. Enforce strong password policies (done)
-2. Sanitize and validate all form inputs (done)
-3. Escape all rendered output from users (done)
-4. Introduce HTTPS and secure headers (recommended for deployment)
-5. Update all dependencies and monitor via `pip-audit` (suggested)
+## 🧪 Security Assessment Findings
+- 🔓 **Weak password policies** (e.g., accepted short/simple passwords)
+- ⚠️ **No validation on some form inputs** (transfer/deposit fields)
+- ❌ **Session fixation risk** (missing session security settings)
+- 🚫 **No output escaping** in some Jinja2 templates (possible XSS)
+- 🐛 **Uncaught exceptions and debug info visible**
+- 💾 **Float used for balances** (risk of precision loss)
+- ⛔ **No timeout or error handling for external PSGC API**
 
-## Technology Stack
-- **Backend:** Python, Flask, SQLAlchemy
-- **Frontend:** HTML5, CSS3, Bootstrap 5
-- **Database:** MySQL or MariaDB with `Decimal`-based financial fields
-- **Security:** Flask-Bcrypt, Flask-WTF, Flask-Limiter, Flask-Login, Flask-Talisman
-- **API:** PSGC GitLab API for hierarchical location selection
+---
 
-## Setup Instructions
+## 🔐 Security Improvements Implemented
+- 🔑 Strong password validation with regex and min length
+- 🔐 Secure password hashing with `bcrypt`
+- 🧹 Normalized emails/usernames (trim, lowercase)
+- 🧱 Switched from `Float` to `Decimal` for monetary data
+- 🧼 CSRF protection enabled via `Flask-WTF`
+- 🔒 Rate limiting with `Flask-Limiter` on sensitive routes
+- 🧯 Exception handling for PSGC API calls
+- 📛 Restricted self-transfers, enforced role-based control
+- 🧰 Secure cookie/session settings (`HttpOnly`, `Secure`, `SameSite`)
+- 🛡 Output escaping enforced on user-facing templates
+- 🧪 Transaction logs improved for auditing
+- 🌐 Optional HTTPS enforcement via `Flask-Talisman`
+
+---
+
+## 🧨 Penetration Testing Report
+### Vulnerabilities Identified:
+- Weak password accepted (e.g., "1234")
+- Unauthenticated transfer attempts (forced browsing)
+- Exposed error messages (stack traces in debug)
+- Session fixation through fixed session cookies
+
+### Exploitation Steps:
+- Brute force login with weak password
+- Modify HTML to submit transfer to other users
+- Trigger unhandled exceptions and view debug info
+
+### Recommendations:
+- Enforce stronger password rules
+- Sanitize and validate all inputs
+- Harden session and CSRF protections
+- Disable debug mode and use error templates
+
+---
+
+## 🛠 Remediation Plan
+| Issue | Fix |
+|------|-----|
+| Weak Passwords | Enforced strong regex and min length in forms |
+| Float for Money | Changed to `Decimal` with `Numeric(12, 2)` |
+| CSRF Missing | Initialized `CSRFProtect` globally in `app.py` |
+| Session Fixation | Enabled `session_protection = 'strong'` |
+| Output Encoding | Avoided using `|safe`, used `|e` and defaults |
+| Debug Info | Added 404/500 handlers and disabled debug in production |
+| Rate Abuse | Added `Flask-Limiter` with tiered throttling per role |
+
+---
+
+## 🧱 Technology Stack
+- **Backend:** Python 3.9, Flask
+- **Database:** MySQL with SQLAlchemy ORM
+- **Frontend:** HTML, CSS, Bootstrap 5
+- **Authentication:** Flask-Login, Flask-Bcrypt, Flask-WTF
+- **Security Libraries:** Flask-Limiter, Flask-Talisman (optional), Flask-WTF
+- **Geographic API:** PSGC API (with caching and fallback)
+
+---
+
+## ⚙️ Setup Instructions
 
 ### Prerequisites
 - Python 3.7+
 - pip
-- MySQL Server 5.7+ or MariaDB 10.2+
+- MySQL Server (or MariaDB)
 
-### Installation
+### Local Setup
 ```bash
 git clone https://github.com/yourusername/simple-banking-app-v2.git
 cd simple-banking-app-v2
 pip install -r requirements.txt
-cp .env.example .env  # Configure DB credentials
+cp .env.example .env  # Fill in your credentials
 python init_db.py
 python app.py
 ```
-Access the app at: `http://localhost:5000`
 
-### Sample .env Configuration
+### Environment Variables Example:
 ```
 DATABASE_URL=mysql+pymysql://bankapp:your_password@localhost/simple_banking
 MYSQL_USER=bankapp
@@ -95,14 +130,13 @@ SECRET_KEY=your_secret_key
 REDIS_URL=memory://
 ```
 
-## Deployment (PythonAnywhere)
-- Push code to GitHub and clone into PythonAnywhere
-- Set up virtualenv and install requirements
-- Configure `.env` variables
-- Set WSGI file path and run `init_db.py`
-
-## License
-MIT License — see `LICENSE` file
+### Deploy to PythonAnywhere
+- Upload via Git
+- Configure manual web app (Python 3.8+)
+- Set environment variables in dashboard
+- Run `python init_db.py` to initialize DB
+- Ensure `.env` file is secure and excluded in `.gitignore`
 
 ---
-**Project for academic use only. Not for real-world financial deployment.**
+
+This project was completed as part of a platform security course to demonstrate secure software development, vulnerability assessment, and remediation best practices.
