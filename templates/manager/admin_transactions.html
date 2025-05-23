@@ -3,23 +3,28 @@
 {% block content %}
 <div class="row">
     <div class="col-lg-10 offset-lg-1">
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <h2>Admin Transactions Audit</h2>
-            <a href="{{ url_for('manager_dashboard') }}" class="btn btn-outline-primary">Back to Manager Dashboard</a>
+        <!-- Page Header -->
+        <div class="card shadow-sm mb-4">
+            <div class="card-body d-flex flex-column flex-md-row justify-content-between align-items-md-center">
+                <h3 class="mb-3 mb-md-0"><i class="bi bi-shield-check me-2"></i>Admin Transactions Audit</h3>
+                <a href="{{ url_for('manager_dashboard') }}" class="btn btn-outline-primary">
+                    <i class="bi bi-arrow-left-circle me-1"></i>Back to Manager Dashboard
+                </a>
+            </div>
         </div>
-        
-        <!-- Filters -->
-        <div class="card mb-4">
-            <div class="card-header">
-                <h5 class="mb-0">Filter Transactions</h5>
+
+        <!-- Filter Panel -->
+        <div class="card shadow-sm mb-4">
+            <div class="card-header bg-light">
+                <h5 class="mb-0"><i class="bi bi-funnel me-2"></i>Filter Transactions</h5>
             </div>
             <div class="card-body">
                 <form method="GET" action="{{ url_for('admin_transactions') }}" class="row g-3">
-                    <div class="col-md-12 mb-3">
+                    <div class="col-md-12">
                         <div class="input-group">
-                            <input type="text" name="search" class="form-control" placeholder="Search transactions (ID, username, details, etc.)" value="{{ request.args.get('search', '') }}">
-                            <button type="submit" class="btn btn-primary">
-                                <i class="bi bi-search"></i> Search
+                            <input type="text" name="search" class="form-control" placeholder="Search by username, ID, or detail..." value="{{ request.args.get('search', '') }}">
+                            <button class="btn btn-primary" type="submit">
+                                <i class="bi bi-search"></i>
                             </button>
                         </div>
                     </div>
@@ -27,8 +32,8 @@
                         <label class="form-label">Transaction Type</label>
                         <select name="type" class="form-select">
                             <option value="">All Types</option>
-                            <option value="deposit" {% if request.args.get('type') == 'deposit' %}selected{% endif %}>Deposits Only</option>
-                            <option value="transfer" {% if request.args.get('type') == 'transfer' %}selected{% endif %}>Transfers Only</option>
+                            <option value="deposit" {% if request.args.get('type') == 'deposit' %}selected{% endif %}>Deposits</option>
+                            <option value="transfer" {% if request.args.get('type') == 'transfer' %}selected{% endif %}>Transfers</option>
                             <option value="user_edit" {% if request.args.get('type') == 'user_edit' %}selected{% endif %}>User Modifications</option>
                         </select>
                     </div>
@@ -36,8 +41,8 @@
                         <label class="form-label">Admin Role</label>
                         <select name="role" class="form-select">
                             <option value="">All Roles</option>
-                            <option value="sender" {% if request.args.get('role') == 'sender' %}selected{% endif %}>Admin as Sender</option>
-                            <option value="receiver" {% if request.args.get('role') == 'receiver' %}selected{% endif %}>Admin as Receiver</option>
+                            <option value="sender" {% if request.args.get('role') == 'sender' %}selected{% endif %}>Sender</option>
+                            <option value="receiver" {% if request.args.get('role') == 'receiver' %}selected{% endif %}>Receiver</option>
                         </select>
                     </div>
                     <div class="col-md-4">
@@ -45,136 +50,132 @@
                         <select name="admin_id" class="form-select">
                             <option value="">All Admins</option>
                             {% for admin in admins %}
-                            <option value="{{ admin.id }}" {% if request.args.get('admin_id')|int == admin.id %}selected{% endif %}>
-                                {{ admin.username }}
-                            </option>
+                            <option value="{{ admin.id }}" {% if request.args.get('admin_id')|int == admin.id %}selected{% endif %}>{{ admin.username }}</option>
                             {% endfor %}
                         </select>
                     </div>
-                    <div class="col-md-2 align-self-end">
-                        <button type="submit" class="btn btn-primary w-100">Apply Filters</button>
+                    <div class="col-md-2 d-flex align-items-end">
+                        <button type="submit" class="btn btn-primary w-100">Apply</button>
                     </div>
-                    {% if request.args.get('search') or request.args.get('type') or request.args.get('role') or request.args.get('admin_id') %}
-                    <div class="col-12 mt-2">
-                        <a href="{{ url_for('admin_transactions') }}" class="btn btn-outline-secondary btn-sm">
-                            <i class="bi bi-x-circle"></i> Clear All Filters
+                    {% if request.args %}
+                    <div class="col-12">
+                        <a href="{{ url_for('admin_transactions') }}" class="btn btn-outline-secondary btn-sm mt-2">
+                            <i class="bi bi-x-circle me-1"></i>Clear Filters
                         </a>
                     </div>
                     {% endif %}
                 </form>
             </div>
         </div>
-        
-        <!-- Admin Transaction History -->
-        <div class="card">
+
+        <!-- Transactions Table -->
+        <div class="card shadow-sm">
             <div class="card-header d-flex justify-content-between align-items-center">
                 <h5 class="mb-0">
                     {% if request.args.get('search') %}
-                    Search Results: "{{ request.args.get('search') }}"
+                        Search Results for: "{{ request.args.get('search') }}"
                     {% else %}
-                    All Admin Transactions
+                        Admin Transactions
                     {% endif %}
                 </h5>
-                <span class="badge bg-secondary">{{ transactions|length }} transactions found</span>
+                <span class="badge bg-secondary">{{ transactions|length }} found</span>
             </div>
             <div class="card-body">
                 {% if transactions %}
                 <div class="table-responsive">
-                    <table class="table table-striped">
-                        <thead>
+                    <table class="table table-hover align-middle">
+                        <thead class="table-light">
                             <tr>
-                                <th>Transaction ID</th>
-                                <th>Date & Time</th>
+                                <th>ID</th>
+                                <th>Timestamp</th>
                                 <th>Type</th>
-                                <th>From</th>
-                                <th>To</th>
+                                <th>Sender</th>
+                                <th>Receiver</th>
                                 <th>Amount</th>
                                 <th>Details</th>
-                                <th>Admin Role</th>
+                                <th>Role</th>
                             </tr>
                         </thead>
                         <tbody>
-                            {% for transaction in transactions %}
+                            {% for t in transactions %}
                             <tr>
-                                <td>{{ transaction.id }}</td>
-                                <td>{{ transaction.timestamp.strftime('%Y-%m-%d %H:%M') }}</td>
+                                <td>{{ t.id }}</td>
+                                <td>{{ t.timestamp.strftime('%Y-%m-%d %H:%M') }}</td>
                                 <td>
-                                    {% if transaction.transaction_type == 'deposit' %}
-                                    <span class="badge bg-info">Deposit</span>
-                                    {% elif transaction.transaction_type == 'user_edit' %}
-                                    <span class="badge bg-warning text-dark">User Edit</span>
+                                    {% if t.transaction_type == 'deposit' %}
+                                        <span class="badge bg-info">Deposit</span>
+                                    {% elif t.transaction_type == 'user_edit' %}
+                                        <span class="badge bg-warning text-dark">User Edit</span>
                                     {% else %}
-                                    <span class="badge bg-primary">Transfer</span>
+                                        <span class="badge bg-primary">Transfer</span>
                                     {% endif %}
                                 </td>
                                 <td>
-                                    {% if transaction.sender %}
-                                        {{ transaction.sender.username }}
-                                        {% if transaction.sender.is_admin %}
-                                        <span class="badge bg-warning text-dark">Admin</span>
-                                        {% elif transaction.sender.is_manager %}
-                                        <span class="badge bg-danger">Manager</span>
+                                    {% if t.sender %}
+                                        {{ t.sender.username }}
+                                        {% if t.sender.is_admin %}
+                                            <span class="badge bg-warning text-dark">Admin</span>
+                                        {% elif t.sender.is_manager %}
+                                            <span class="badge bg-danger">Manager</span>
                                         {% endif %}
                                     {% else %}
-                                        <span class="text-muted">Unknown</span>
+                                        <span class="text-muted">N/A</span>
                                     {% endif %}
                                 </td>
                                 <td>
-                                    {% if transaction.receiver %}
-                                        {{ transaction.receiver.username }}
-                                        {% if transaction.receiver.is_admin %}
-                                        <span class="badge bg-warning text-dark">Admin</span>
-                                        {% elif transaction.receiver.is_manager %}
-                                        <span class="badge bg-danger">Manager</span>
+                                    {% if t.receiver %}
+                                        {{ t.receiver.username }}
+                                        {% if t.receiver.is_admin %}
+                                            <span class="badge bg-warning text-dark">Admin</span>
+                                        {% elif t.receiver.is_manager %}
+                                            <span class="badge bg-danger">Manager</span>
                                         {% endif %}
                                     {% else %}
-                                        <span class="text-muted">Unknown</span>
+                                        <span class="text-muted">N/A</span>
                                     {% endif %}
                                 </td>
                                 <td class="fw-bold">
-                                    {% if transaction.transaction_type == 'user_edit' %}
-                                    <span class="text-muted">N/A</span>
+                                    {% if t.transaction_type != 'user_edit' %}
+                                        ₱{{ "%.2f"|format(t.amount) }}
                                     {% else %}
-                                    ₱{{ "%.2f"|format(transaction.amount) }}
+                                        <span class="text-muted">N/A</span>
                                     {% endif %}
                                 </td>
                                 <td>
-                                    {% if transaction.transaction_type == 'user_edit' and transaction.details %}
-                                    <button type="button" class="btn btn-sm btn-outline-info" data-bs-toggle="modal" data-bs-target="#detailsModal{{ transaction.id }}">
-                                        View Changes
-                                    </button>
-                                    
-                                    <!-- Details Modal -->
-                                    <div class="modal fade" id="detailsModal{{ transaction.id }}" tabindex="-1" aria-labelledby="detailsModalLabel{{ transaction.id }}" aria-hidden="true">
-                                        <div class="modal-dialog modal-lg">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <h5 class="modal-title" id="detailsModalLabel{{ transaction.id }}">User Modification Details</h5>
-                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                                </div>
-                                                <div class="modal-body">
-                                                    <p><strong>Admin:</strong> {{ transaction.sender.username }}</p>
-                                                    <p><strong>Modified User:</strong> {{ transaction.receiver.username }}</p>
-                                                    <p><strong>Date:</strong> {{ transaction.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}</p>
-                                                    <hr>
-                                                    <h6>Changes Made:</h6>
-                                                    <pre class="bg-light p-3 rounded">{{ transaction.details }}</pre>
-                                                </div>
-                                                <div class="modal-footer">
-                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                    {% if t.transaction_type == 'user_edit' and t.details %}
+                                        <button class="btn btn-sm btn-outline-info" data-bs-toggle="modal" data-bs-target="#detailsModal{{ t.id }}">
+                                            View
+                                        </button>
+
+                                        <!-- Modal -->
+                                        <div class="modal fade" id="detailsModal{{ t.id }}" tabindex="-1" aria-labelledby="modalLabel{{ t.id }}" aria-hidden="true">
+                                            <div class="modal-dialog modal-lg modal-dialog-scrollable">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="modalLabel{{ t.id }}">Modification Details</h5>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <p><strong>Admin:</strong> {{ t.sender.username }}</p>
+                                                        <p><strong>User Modified:</strong> {{ t.receiver.username }}</p>
+                                                        <hr>
+                                                        <pre class="bg-light p-3 rounded">{{ t.details }}</pre>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
                                     {% else %}
-                                    <span class="text-muted">-</span>
+                                        <span class="text-muted">-</span>
                                     {% endif %}
                                 </td>
                                 <td>
-                                    {% if transaction.sender and transaction.sender.is_admin %}
+                                    {% if t.sender and t.sender.is_admin %}
                                         <span class="badge bg-success">Sender</span>
                                     {% endif %}
-                                    {% if transaction.receiver and transaction.receiver.is_admin %}
+                                    {% if t.receiver and t.receiver.is_admin %}
                                         <span class="badge bg-info">Receiver</span>
                                     {% endif %}
                                 </td>
@@ -184,12 +185,12 @@
                     </table>
                 </div>
                 {% else %}
-                <div class="text-center p-4">
-                    <p class="text-muted">No admin transactions found.</p>
+                <div class="text-center p-4 text-muted">
+                    <p>No admin transactions match your criteria.</p>
                 </div>
                 {% endif %}
             </div>
         </div>
     </div>
 </div>
-{% endblock %} 
+{% endblock %}
