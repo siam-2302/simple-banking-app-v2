@@ -1,22 +1,24 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="row">
-    <div class="col-md-6 offset-md-3">
-        <div class="card">
-            <div class="card-header">
-                <h4>Transfer Money</h4>
+<div class="row justify-content-center">
+    <div class="col-md-8 col-lg-6">
+        <div class="card shadow">
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0"><i class="bi bi-arrow-left-right me-2"></i> Transfer Money</h4>
             </div>
             <div class="card-body">
                 <div class="alert alert-info">
-                    Your current balance: <strong>₱{{ "%.2f"|format(current_user.balance) }}</strong>
+                    <i class="bi bi-cash-coin me-1"></i> Your current balance: 
+                    <strong>₱{{ "%.2f"|format(current_user.balance) }}</strong>
                 </div>
-                
+
                 <form method="post" novalidate>
                     {{ form.hidden_tag() }}
-                    
-                    <div class="mb-3">
-                        <label class="form-label">Transfer Method</label>
+
+                    <!-- Transfer Method Toggle -->
+                    <div class="mb-4">
+                        <label class="form-label fw-semibold">Transfer Method</label>
                         <div class="btn-group w-100" role="group">
                             {% for subfield in form.transfer_type %}
                             <input type="radio" class="btn-check" name="transfer_type" id="{{ subfield.id }}" value="{{ subfield.data }}" autocomplete="off"
@@ -25,23 +27,26 @@
                             {% endfor %}
                         </div>
                     </div>
-                    
+
+                    <!-- Username Field -->
                     <div class="mb-3" id="username-field">
                         {{ form.recipient_username.label(class="form-label") }}
                         {{ form.recipient_username(class="form-control") }}
                         {% for error in form.recipient_username.errors %}
-                        <div class="text-danger">{{ error }}</div>
+                        <div class="text-danger small">{{ error }}</div>
                         {% endfor %}
                     </div>
-                    
+
+                    <!-- Account Number Field -->
                     <div class="mb-3" id="account-field" style="display: none;">
                         {{ form.recipient_account.label(class="form-label") }}
                         {{ form.recipient_account(class="form-control") }}
                         {% for error in form.recipient_account.errors %}
-                        <div class="text-danger">{{ error }}</div>
+                        <div class="text-danger small">{{ error }}</div>
                         {% endfor %}
                     </div>
-                    
+
+                    <!-- Amount Field -->
                     <div class="mb-3">
                         {{ form.amount.label(class="form-label") }}
                         <div class="input-group">
@@ -49,11 +54,13 @@
                             {{ form.amount(class="form-control") }}
                         </div>
                         {% for error in form.amount.errors %}
-                        <div class="text-danger">{{ error }}</div>
+                        <div class="text-danger small">{{ error }}</div>
                         {% endfor %}
                     </div>
-                    <div class="d-grid gap-2">
-                        {{ form.submit(class="btn btn-primary") }}
+
+                    <!-- Submit Button -->
+                    <div class="d-grid mt-4">
+                        {{ form.submit(class="btn btn-success btn-lg") }}
                     </div>
                 </form>
             </div>
@@ -61,37 +68,26 @@
     </div>
 </div>
 
+<!-- Toggle recipient field visibility -->
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Show/hide fields based on transfer type
-    var transferType = document.getElementsByName('transfer_type');
-    var usernameField = document.getElementById('username-field');
-    var accountField = document.getElementById('account-field');
-    
-    for (var i = 0; i < transferType.length; i++) {
-        transferType[i].addEventListener('change', function() {
-            if (this.value === 'username') {
-                usernameField.style.display = 'block';
-                accountField.style.display = 'none';
-            } else if (this.value === 'account') {
-                usernameField.style.display = 'none';
-                accountField.style.display = 'block';
-            }
-        });
-    }
-    
-    // Set initial state
-    for (var i = 0; i < transferType.length; i++) {
-        if (transferType[i].checked) {
-            if (transferType[i].value === 'username') {
-                usernameField.style.display = 'block';
-                accountField.style.display = 'none';
-            } else if (transferType[i].value === 'account') {
-                usernameField.style.display = 'none';
-                accountField.style.display = 'block';
-            }
+document.addEventListener('DOMContentLoaded', function () {
+    const transferType = document.getElementsByName('transfer_type');
+    const usernameField = document.getElementById('username-field');
+    const accountField = document.getElementById('account-field');
+
+    function toggleFields() {
+        const selected = [...transferType].find(input => input.checked);
+        if (selected && selected.value === 'username') {
+            usernameField.style.display = 'block';
+            accountField.style.display = 'none';
+        } else {
+            usernameField.style.display = 'none';
+            accountField.style.display = 'block';
         }
     }
+
+    transferType.forEach(input => input.addEventListener('change', toggleFields));
+    toggleFields(); // Set initial state
 });
 </script>
-{% endblock %} 
+{% endblock %}

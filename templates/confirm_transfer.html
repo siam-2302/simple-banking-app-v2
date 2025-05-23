@@ -1,28 +1,43 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="row">
-    <div class="col-md-6 offset-md-3">
-        <div class="card">
-            <div class="card-header">
-                <h4>Confirm Transfer</h4>
+<div class="row justify-content-center">
+    <div class="col-md-8 col-lg-6">
+        <div class="card shadow">
+            <div class="card-header bg-warning text-dark">
+                <h4 class="mb-0"><i class="bi bi-exclamation-triangle-fill me-2"></i>Confirm Transfer</h4>
             </div>
             <div class="card-body">
-                <div class="alert alert-warning">
-                    <p>Please confirm the following transfer:</p>
-                    <hr>
-                    <p><strong>To:</strong> {{ recipient.username }}</p>
-                    <p><strong>Account Number:</strong> {{ recipient.account_number }}</p>
-                    <p><strong>Amount:</strong> ₱{{ "%.2f"|format(amount) }}</p>
-                    <p><strong>From Account Balance:</strong> ₱{{ "%.2f"|format(current_user.balance) }}</p>
-                    <p><strong>Remaining Balance After Transfer:</strong> ₱{{ "%.2f"|format(current_user.balance - amount) }}</p>
-                </div>
-                
+                <p class="lead">Please review and confirm the following transaction details:</p>
+                <ul class="list-group mb-4">
+                    <li class="list-group-item d-flex justify-content-between">
+                        <strong>Recipient</strong>
+                        <span>{{ recipient.username }}</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between">
+                        <strong>Account Number</strong>
+                        <span>{{ recipient.account_number }}</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between">
+                        <strong>Amount</strong>
+                        <span class="text-success fw-bold">₱{{ "%.2f"|format(amount) }}</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between">
+                        <strong>Your Balance</strong>
+                        <span>₱{{ "%.2f"|format(current_user.balance) }}</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between">
+                        <strong>Remaining Balance</strong>
+                        <span class="text-danger">₱{{ "%.2f"|format(current_user.balance - amount) }}</span>
+                    </li>
+                </ul>
+
                 <form action="{{ url_for('execute_transfer') }}" method="post">
                     {{ form.hidden_tag() }}
-                    
                     <div class="d-flex justify-content-between">
-                        <a href="{{ url_for('transfer') }}" class="btn btn-secondary">Cancel</a>
+                        <a href="{{ url_for('transfer') }}" class="btn btn-outline-secondary">
+                            <i class="bi bi-arrow-left"></i> Cancel
+                        </a>
                         {{ form.submit(class="btn btn-success") }}
                     </div>
                 </form>
@@ -30,4 +45,4 @@
         </div>
     </div>
 </div>
-{% endblock %} 
+{% endblock %}
