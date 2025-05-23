@@ -2,9 +2,9 @@
 Securing an Existing Banking Application – Security Assessment and Improvement of a Web-Based Banking Application
 
 ## Group Members
-- Member 1 – Role
-- Member 2 – Role
-- Member 3 – Role
+- Member 1: [Busadre, Christian Siam B.]
+- Member 2: [Lagdaan, Jeremy C.]
+- Member 3: [Palomares, Juan Paolo C.]
 
 ## Introduction
 This project aims to assess and improve the security posture of an existing open-source banking web application. The application simulates real-world banking functionality including user account management, fund transfers, and role-based user permissions. Our team performed a comprehensive security review, refactored the user interface, and applied secure coding practices to harden the system against common web threats.
