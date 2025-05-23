@@ -87,8 +87,6 @@ cp .env.example .env  # Configure DB and secret key
 python init_db.py
 python app.py
 ```
-Visit the app at: [http://localhost:5000](http://localhost:5000)
-
 ### Sample .env Configuration
 ```
 DATABASE_URL=mysql+pymysql://bankapp:your_password@localhost/simple_banking
