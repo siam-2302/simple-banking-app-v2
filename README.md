@@ -86,10 +86,10 @@ The repository was cloned and edited on Visual Studio Code and later uploaded on
 git clone https://github.com/yourusername/simple-banking-app-v2.git
 cd simple-banking-app-v2
 pip install -r requirements.txt
-python init_db.py(you need to create and copy the contents of .env before running this code)
+python init_db.py
 python app.py
 ```
-### .env Configuration(Create .env file)
+### .env Configuration
 ```
 DATABASE_URL=mysql+pymysql://bankapp:your_password@localhost/simple_banking
 MYSQL_USER=bankapp
@@ -101,13 +101,15 @@ SECRET_KEY=your_secret_key
 REDIS_URL=memory://
 ```
 
+For deployment tutorials on PythonAnywhere visit the [link here](https://onedrive.live.com/?redeem=aHR0cHM6Ly8xZHJ2Lm1zL2YvYy81NjY1ZTNhOTc4ZDkzZjY3L0VyXzMxWTc0WWhsQWd4aDZpUmRDU3djQi1xRjhvUnVCNUFzVVg5QlFxNC1sTUE%5FZT1pYXdxU0c&id=5665E3A978D93F67%21s8ed5f7bf62f8401983187a8917424b07&cid=5665E3A978D93F67).
+
+
 
 
 ## Deployment (PythonAnywhere)
 - link: https://hyun23.pythonanywhere.com/login
 
 ## Default Users
-The app comes preloaded with the following default user accounts for testing and initial access:
 
 | Username  | Password     | Role          | Notes                |
 |-----------|--------------|---------------|----------------------|
