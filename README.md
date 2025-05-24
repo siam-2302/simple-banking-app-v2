@@ -11,6 +11,7 @@ This project aims to assess and improve the security posture of an existing open
 
 The original application was cloned from:  
 [https://github.com/lanlanjr/simple-banking-app](https://github.com/lanlanjr/simple-banking-app)
+
 The repository was cloned and edited on Visual Studio Code and later uploaded on GitHub
 
 ## Objectives
