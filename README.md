@@ -79,17 +79,17 @@ The repository was cloned and edited on Visual Studio Code and later uploaded on
 - Python 3.7+
 - pip
 - MySQL Server 5.7+ or MariaDB 10.2+
+- XAMPP (if not familiar with Mysql software)
 
 ### Installation
 ```bash
 git clone https://github.com/yourusername/simple-banking-app-v2.git
 cd simple-banking-app-v2
 pip install -r requirements.txt
-cp .env.example .env  # Configure DB and secret key
-python init_db.py
+python init_db.py(you need to create and copy the contents of .env before running this code)
 python app.py
 ```
-### Sample .env Configuration
+### .env Configuration(Create .env file)
 ```
 DATABASE_URL=mysql+pymysql://bankapp:your_password@localhost/simple_banking
 MYSQL_USER=bankapp
@@ -100,6 +100,8 @@ MYSQL_DATABASE=simple_banking
 SECRET_KEY=your_secret_key
 REDIS_URL=memory://
 ```
+
+
 
 ## Deployment (PythonAnywhere)
 - Push code to GitHub
