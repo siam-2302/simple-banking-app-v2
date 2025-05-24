@@ -1,0 +1,24 @@
+Evaluation Criteria:
+1. Security Assessment Quality: How thorough and effective was the security
+analysis?
+The security assessment conducted was comprehensive and aligned with OWASP Top 10 vulnerabilities. Each module of the application from authentication to administrative functionality was reviewed for potential weaknesses, such as insecure session handling, improper input validation, and missing security headers. Manual code review and basic static analysis tools were also used to identify logical flaws and outdated dependencies.
+
+2. Security Improvements: How effectively were security vulnerabilities
+addressed?
+Identified vulnerabilities were systematically addressed. Password storage was enhanced using bcrypt, input validation was tightened using WTForms, and CSRF protection was applied consistently. Flask-Limiter was used to enforce rate limiting on critical endpoints. Monetary calculations were switched to use Decimal for precision, and session management was improved with secure cookie settings and better configuration.
+
+3. Vulnerability Assessment: How thorough and effective was the penetration
+testing process?
+Penetration testing included manual attempts at common attacks like XSS, CSRF, and brute-force login. These were cross-verified with improvements (e.g., failed XSS attempts due to output encoding, blocked brute-force via rate limiting). SQL injection was mitigated through use of SQLAlchemy ORM. The password reset flow was also reviewed for token expiration and misuse prevention.
+
+4. Documentation: How clear, comprehensive, and well-organized is the
+documentation?
+Its well-structured, covering everything from setup and deployment to security findings and remediation. Each section is clear, formatted consistently in Markdown, and includes code snippets, environment setup instructions, and summaries of both the original issues and applied fixes. The README was fully updated to reflect all improvements.
+
+5. Collaboration: How effectively did the group members collaborate using
+GitHub?
+Initially, the team collaborated using Visual Studio Code for local development and testing. Each member worked on different parts of the application and shared updates manually. Once the prototype was stable, the project was uploaded to GitHub.
+
+6. Presentation: How well does the student communicate their understanding of
+the security improvements?
+The presentation showcases not only the functional aspects of the application but also highlights specific vulnerabilities and the reasoning behind each fix. Technical terms are explained clearly, and the improvements are connected to real-world best practices, showing a solid understanding of secure development principles.
