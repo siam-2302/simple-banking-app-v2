@@ -104,13 +104,17 @@ REDIS_URL=memory://
 
 
 ## Deployment (PythonAnywhere)
-- Push code to GitHub
-- Clone into PythonAnywhere
-- Configure a virtualenv and install requirements
-- Set environmental variables in the dashboard
-- Configure WSGI path and initialize the DB via `init_db.py`
+- link: https://hyun23.pythonanywhere.com/login
 
--link: https://hyun23.pythonanywhere.com/login
+## Default Users
+The app comes preloaded with the following default user accounts for testing and initial access:
+
+| Username  | Password     | Role          | Notes                |
+|-----------|--------------|---------------|----------------------|
+| testuser  | Test123!     | Regular User  | Test user account    |
+
+> **Note:** Passwords are case-sensitive. Please change the default passwords after your first login for security.
+
 
 ---
 **Project is for academic use only. Not for real-world financial deployment.**
