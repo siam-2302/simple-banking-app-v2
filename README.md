@@ -110,5 +110,7 @@ REDIS_URL=memory://
 - Set environmental variables in the dashboard
 - Configure WSGI path and initialize the DB via `init_db.py`
 
+-link: https://hyun23.pythonanywhere.com/login
+
 ---
 **Project is for academic use only. Not for real-world financial deployment.**
