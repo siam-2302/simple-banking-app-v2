@@ -113,7 +113,7 @@ The app comes preloaded with the following default user accounts for testing and
 |-----------|--------------|---------------|----------------------|
 | testuser  | Test123!     | Regular User  | Test user account    |
 
-> **Note:** Passwords are case-sensitive. Please change the default passwords after your first login for security.
+> **Note:**This is only for test users.
 
 
 ---
